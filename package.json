@@ -1,0 +1,10 @@
+{
+  "name": "gfwm",
+  "version": "0.0.0",
+  "description": "Manage gfwed site list",
+  "main": "index.js",
+  "scripts": {
+  },
+  "author": "tsing",
+  "license": "MIT"
+}
