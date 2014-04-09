@@ -3,8 +3,12 @@
   "version": "0.0.0",
   "description": "Manage gfwed site list",
   "main": "index.js",
-  "scripts": {
-  },
+  "scripts": {},
   "author": "tsing",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "koa-static": "^1.4.3",
+    "koa": "^0.5.2",
+    "koa-route": "^1.1.1"
+  }
 }
