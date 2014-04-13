@@ -11,5 +11,10 @@
     "koa": "^0.5.4",
     "koa-route": "^1.1.1",
     "thunkify": "^1.0.0"
+  },
+  "devDependencies": {
+    "mocha": "^1.18.2",
+    "should": "^3.3.0",
+    "co": "^3.0.5"
   }
 }
