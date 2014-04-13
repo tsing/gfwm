@@ -1,9 +1,9 @@
 var koa = require('koa');
 var route = require('koa-route');
-var Domain = require('./domain');
+var Store = require('./lib/store');
 
 var app = koa();
-var store = new Domain('domains.json');
+var store = new Store('domains.json');
 
 app.use(route.get('/domains', function *() {
   this.body = yield store.index();
@@ -20,6 +20,5 @@ app.use(route.del('/domains/:domain', function *(domain) {
 }));
 
 var port = 3000;
-
 app.listen(port);
 console.log('Listening at http://localhost:' + port);
