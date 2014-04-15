@@ -3,7 +3,9 @@
   "version": "0.0.0",
   "description": "Manage gfwed site list",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+      "test": "node_modules/mocha/bin/mocha --harmony-generators"
+  },
   "author": "tsing",
   "license": "MIT",
   "dependencies": {
