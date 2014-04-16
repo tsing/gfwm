@@ -4,7 +4,8 @@
   "description": "Manage gfwed site list",
   "main": "index.js",
   "scripts": {
-    "test": "node_modules/mocha/bin/mocha --harmony-generators"
+    "test": "node_modules/mocha/bin/mocha --harmony-generators",
+    "start": "node --harmony-generators index.js"
   },
   "author": "tsing",
   "license": "MIT",
