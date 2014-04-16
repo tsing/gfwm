@@ -7,6 +7,10 @@ beforeEach(function() {
   fs.truncateSync('domains.json');
 });
 
+afterEach(function() {
+  fs.truncateSync('domains.json');
+});
+
 describe('get domains', function() {
   it('should return [] when no records', function(done) {
     request
@@ -77,5 +81,24 @@ describe('delete domains', function() {
     request
       .delete('/domains/google.com')
       .expect(404, done);
+  });
+});
+
+describe('get pac', function() {
+  it('should return pac file', function(done) {
+    var domains = ['google.com', 'foo.bar']
+    fs.writeFileSync('domains.json', JSON.stringify(domains));
+
+    var config = require('../config.json')
+    request
+      .get('/pac/foo.pac')
+      .expect(200)
+      .expect('content-type', 'application/x-ns-proxy-autoconfig')
+      .end(function(err, res) {
+        if (err) return done(err);
+        res.text.should.containEql(config.proxy);
+        res.text.should.containEql(JSON.stringify(domains));
+        done();
+      });
   });
 });

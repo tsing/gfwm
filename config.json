@@ -1,0 +1,3 @@
+{
+  "proxy": "PROXY foo.bar.com:8080"
+}

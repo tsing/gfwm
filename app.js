@@ -1,9 +1,15 @@
 var koa = require('koa');
 var route = require('koa-route');
 var Store = require('./lib/store');
+var views = require('koa-views');
 
 var app = koa();
 var store = new Store('domains.json');
+var config = require('./config.json');
+
+app.use(views('./views', 'pac', {
+  pac: 'underscore'
+}));
 
 app.use(route.get('/domains', function *() {
   this.body = yield store.index();
@@ -24,5 +30,14 @@ app.use(route.del('/domains/:domain', function *(domain) {
   this.status = result ? 204 : 404;
 }));
 
+app.use(route.get('/pac/(:user).pac', function *(user) {
+  this.type = 'application/x-ns-proxy-autoconfig';
+
+  var domains = yield store.load();
+  yield this.render('pac', {
+    domains: domains,
+    proxy: config.proxy
+  });
+}));
 
 module.exports = exports = app;
