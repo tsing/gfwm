@@ -16,7 +16,8 @@
     "thunkify": "^1.0.0",
     "koa-views": "^1.2.1",
     "underscore": "^1.6.0",
-    "debug": "^0.8.0"
+    "debug": "^0.8.0",
+    "sse-stream": "git://github.com/segmentio/sse-stream"
   },
   "devDependencies": {
     "mocha": "^1.18.2",
