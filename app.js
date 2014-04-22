@@ -36,6 +36,7 @@ app.use(route.put('/rules/:domain', function *(domain) {
   try {
     yield store.add(domain, body.colo);
     this.status = 201;
+    subscription.notify({action: 'add', domain: domain, colo: body.colo});
   } catch (err) {
     this.throw(409, err.message);
   }
@@ -44,6 +45,31 @@ app.use(route.put('/rules/:domain', function *(domain) {
 app.use(route.del('/rules/:domain', function *(domain) {
   var result = yield store.delete(domain);
   this.status = result ? 204 : 404;
+  if (result) {
+    subscription.notify({action: 'del', domain: domain});
+  }
+}));
+
+app.use(route.get('/rules/events', function *() {
+  this.req.setTimeout(Infinity);
+
+  this.type = 'text/event-stream; charset=utf-8';
+  this.set('Cache-Control', 'no-cache');
+  this.set('Connection', 'keep-alive');
+
+  var body = this.body = sse();
+  var stream = subscription.subscribe();
+  stream.pipe(body);
+
+  var socket = this.socket;
+  socket.on('error', close);
+  socket.on('close', close);
+
+  function close() {
+    stream.unpipe(body);
+    stream.removeListener('error', close);
+    stream.removeListener('close', close);
+  }
 }));
 
 app.use(route.get('/pac/(:user).pac', function *(user) {
