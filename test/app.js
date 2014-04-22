@@ -31,9 +31,18 @@ describe('get rules', function() {
 });
 
 describe('put rules', function() {
+  it('require .colo', function(done) {
+    request
+      .put('/rules/google.com')
+      .set('Content-Type', 'application/json')
+      .send({})
+      .expect(400, done);
+  });
   it('should save domain', function(done) {
     request
       .put('/rules/google.com')
+      .set('Content-Type', 'application/json')
+      .send({'colo': 'foo'})
       .expect(201, done);
   });
 
@@ -41,6 +50,8 @@ describe('put rules', function() {
     fs.writeFileSync('rules.json', JSON.stringify({'google.com': 'us'}));
     request
       .put('/rules/facebook.com')
+      .set('Content-Type', 'application/json')
+      .send({'colo': 'foo'})
       .expect(201, done);
   });
 
@@ -51,18 +62,24 @@ describe('put rules', function() {
     it('should return 409 for duplicated domain', function(done) {
       request
         .put('/rules/google.com')
+        .set('Content-Type', 'application/json')
+        .send({'colo': 'foo'})
         .expect(409, done);
     });
 
     it('should return 409 for subdomain', function(done) {
       request
         .put('/rules/www.google.com')
+        .set('Content-Type', 'application/json')
+        .send({'colo': 'foo'})
         .expect(409, done);
     });
 
     it('should return 409 for parent domain', function(done) {
       request
         .put('/rules/com')
+        .set('Content-Type', 'application/json')
+        .send({'colo': 'foo'})
         .expect(409, done);
     });
   });
