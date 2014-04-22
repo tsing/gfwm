@@ -18,7 +18,8 @@
     "underscore": "^1.6.0",
     "debug": "^0.8.0",
     "sse-stream": "git://github.com/segmentio/sse-stream",
-    "co-body": "0.0.1"
+    "co-body": "0.0.1",
+    "eventsource": "^0.1.0"
   },
   "devDependencies": {
     "mocha": "^1.18.2",
