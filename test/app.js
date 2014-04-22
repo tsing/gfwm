@@ -1,7 +1,7 @@
 var app = require('../app');
 var request = require('supertest').agent(app.listen());
 var fs = require('fs');
-
+var should = require('should');
 
 beforeEach(function() {
   fs.truncateSync('domains.json');
@@ -12,15 +12,15 @@ afterEach(function() {
 });
 
 describe('get domains', function() {
-  it('should return [] when no records', function(done) {
+  it('should return {} when no records', function(done) {
     request
       .get('/domains/')
       .expect(200)
-      .expect('[]', done);
+      .expect('{}', done);
   });
 
   it('should return domains', function(done) {
-    domains = ['facebook.com', 'google.com'];
+    domains = {'facebook.com': 'us', 'google.com': 'us'};
     fs.writeFileSync('domains.json',
       JSON.stringify(domains));
     request
@@ -38,7 +38,7 @@ describe('put domains', function() {
   });
 
   it('shoule save multiple domains', function(done) {
-    fs.writeFileSync('domains.json', JSON.stringify(['google.com']));
+    fs.writeFileSync('domains.json', JSON.stringify({'google.com': 'us'}));
     request
       .put('/domains/facebook.com')
       .expect(201, done);
@@ -46,7 +46,7 @@ describe('put domains', function() {
 
   describe('conflict', function() {
     beforeEach(function() {
-      fs.writeFileSync('domains.json', JSON.stringify(['google.com']));
+      fs.writeFileSync('domains.json', JSON.stringify({'google.com': 'us'}));
     });
     it('should return 409 for duplicated domain', function(done) {
       request
@@ -70,7 +70,7 @@ describe('put domains', function() {
 
 describe('delete domains', function() {
   it('should delete domain', function(done) {
-    fs.writeFileSync('domains.json', JSON.stringify(['google.com']));
+    fs.writeFileSync('domains.json', JSON.stringify({'google.com': 'us'}));
 
     request
       .delete('/domains/google.com')
@@ -86,10 +86,10 @@ describe('delete domains', function() {
 
 describe('get pac', function() {
   it('should return pac file', function(done) {
-    var domains = ['google.com', 'foo.bar']
+    var domains = {'google.com': 'us', 'foo.bar': 'us'};
     fs.writeFileSync('domains.json', JSON.stringify(domains));
 
-    var config = require('../config.json')
+    var config = require('../config.json');
     request
       .get('/pac/foo.pac')
       .expect(200)
