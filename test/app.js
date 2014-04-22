@@ -4,90 +4,90 @@ var fs = require('fs');
 var should = require('should');
 
 beforeEach(function() {
-  fs.truncateSync('domains.json');
+  fs.truncateSync('rules.json');
 });
 
 afterEach(function() {
-  fs.truncateSync('domains.json');
+  fs.truncateSync('rules.json');
 });
 
-describe('get domains', function() {
+describe('get rules', function() {
   it('should return {} when no records', function(done) {
     request
-      .get('/domains/')
+      .get('/rules/')
       .expect(200)
       .expect('{}', done);
   });
 
-  it('should return domains', function(done) {
-    domains = {'facebook.com': 'us', 'google.com': 'us'};
-    fs.writeFileSync('domains.json',
-      JSON.stringify(domains));
+  it('should return rules', function(done) {
+    rules = {'facebook.com': 'us', 'google.com': 'us'};
+    fs.writeFileSync('rules.json',
+      JSON.stringify(rules));
     request
-      .get('/domains')
+      .get('/rules')
       .expect(200)
-      .expect(JSON.stringify(domains), done);
+      .expect(JSON.stringify(rules), done);
   });
 });
 
-describe('put domains', function() {
+describe('put rules', function() {
   it('should save domain', function(done) {
     request
-      .put('/domains/google.com')
+      .put('/rules/google.com')
       .expect(201, done);
   });
 
-  it('shoule save multiple domains', function(done) {
-    fs.writeFileSync('domains.json', JSON.stringify({'google.com': 'us'}));
+  it('shoule save multiple rules', function(done) {
+    fs.writeFileSync('rules.json', JSON.stringify({'google.com': 'us'}));
     request
-      .put('/domains/facebook.com')
+      .put('/rules/facebook.com')
       .expect(201, done);
   });
 
   describe('conflict', function() {
     beforeEach(function() {
-      fs.writeFileSync('domains.json', JSON.stringify({'google.com': 'us'}));
+      fs.writeFileSync('rules.json', JSON.stringify({'google.com': 'us'}));
     });
     it('should return 409 for duplicated domain', function(done) {
       request
-        .put('/domains/google.com')
+        .put('/rules/google.com')
         .expect(409, done);
     });
 
     it('should return 409 for subdomain', function(done) {
       request
-        .put('/domains/www.google.com')
+        .put('/rules/www.google.com')
         .expect(409, done);
     });
 
     it('should return 409 for parent domain', function(done) {
       request
-        .put('/domains/com')
+        .put('/rules/com')
         .expect(409, done);
     });
   });
 });
 
-describe('delete domains', function() {
+describe('delete rules', function() {
   it('should delete domain', function(done) {
-    fs.writeFileSync('domains.json', JSON.stringify({'google.com': 'us'}));
+    fs.writeFileSync('rules.json', JSON.stringify({'google.com': 'us'}));
 
     request
-      .delete('/domains/google.com')
+      .delete('/rules/google.com')
       .expect(204, done);
   });
 
   it('should return 404 when domain not recorded', function(done) {
     request
-      .delete('/domains/google.com')
+      .delete('/rules/google.com')
       .expect(404, done);
   });
 });
 
 describe('get pac', function() {
   it('should return pac file', function(done) {
-    var domains = {'google.com': 'us', 'foo.bar': 'us'};
-    fs.writeFileSync('domains.json', JSON.stringify(domains));
+    var rules = {'google.com': 'us', 'foo.bar': 'us'};
+    fs.writeFileSync('rules.json', JSON.stringify(rules));
 
     var config = require('../config.json');
     request
@@ -97,7 +97,7 @@ describe('get pac', function() {
       .end(function(err, res) {
         if (err) return done(err);
         res.text.should.containEql(config.proxy);
-        res.text.should.containEql(JSON.stringify(domains));
+        res.text.should.containEql(JSON.stringify(rules));
         done();
       });
   });

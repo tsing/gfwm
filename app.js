@@ -4,18 +4,18 @@ var Store = require('./lib/store');
 var views = require('koa-views');
 
 var app = koa();
-var store = new Store('domains.json');
+var store = new Store(process.env.STORE_FILE || 'rules.json');
 var config = require('./config.json');
 
 app.use(views('./views', 'pac', {
   pac: 'underscore'
 }));
 
-app.use(route.get('/domains', function *() {
+app.use(route.get('/rules', function *() {
   this.body = yield store.index();
 }));
 
-app.use(route.put('/domains/:domain', function *(domain) {
+app.use(route.put('/rules/:domain', function *(domain) {
   try {
     var result = yield store.add(domain);
     this.status = result ? 201 : 409;
@@ -25,7 +25,7 @@ app.use(route.put('/domains/:domain', function *(domain) {
   }
 }));
 
-app.use(route.del('/domains/:domain', function *(domain) {
+app.use(route.del('/rules/:domain', function *(domain) {
   var result = yield store.delete(domain);
   this.status = result ? 204 : 404;
 }));
